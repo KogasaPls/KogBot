@@ -1,6 +1,6 @@
 import unittest
 
-from bot.structure.containers import Container
+from utils.dependency_injection import Container
 
 
 class GeneratorServiceTests(unittest.IsolatedAsyncioTestCase):

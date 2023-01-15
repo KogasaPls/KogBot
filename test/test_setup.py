@@ -1,7 +1,5 @@
 import unittest
 
-import bot.structure.containers
-
 container = bot.structure.containers.Container()
 container.config.from_yaml('config.yml')
 container.wire(modules=[__name__])

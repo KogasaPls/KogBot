@@ -7,7 +7,7 @@ from typing import Generic
 from bot.services.interfaces import (IGeneratorService, ITokenizerService,
                                      Tokens)
 from models.chat.chat_message import ChatMessage
-from structure.service import Service
+from utils.abstract_base_classes import Service
 
 
 def initial_deque_factory(cls):

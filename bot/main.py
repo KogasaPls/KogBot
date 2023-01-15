@@ -3,7 +3,7 @@ import asyncio
 from models.chat.chat_message import ChatMessage
 from models.chat.chatter import Chatter
 from services.interfaces import IChatService
-from structure.containers import Container
+from utils.dependency_injection import Container
 
 
 async def main(container: Container):
