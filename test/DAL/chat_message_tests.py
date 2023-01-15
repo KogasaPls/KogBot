@@ -39,6 +39,6 @@ class ChatMessageRepositoryTests(unittest.TestCase):
         messageDO = ChatMessageDO.from_chat_message(message)
         self.chat_message_repo.create(messageDO)
         self.assertIsNotNone(messageDO.id)
-        found = self.chat_message_repo.find_by_id(messageDO.id)
+        found = self.chat_message_repo.find(id=messageDO.id)
         self.assertIsNotNone(found)
         self.assertEqual(messageDO.id, found.id)

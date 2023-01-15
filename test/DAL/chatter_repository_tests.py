@@ -17,15 +17,15 @@ class ChatterRepositoryTests(unittest.TestCase):
     def setUp(self):
         self.chatter_repo = ChatterRepository(self.container.db())
 
-    def test_get_chatter_by_name(self):
-        chatter = self.chatter_repo.get_chatter_by_name("KogasaPls")
+    def test_find_by_name(self):
+        chatter = self.chatter_repo.find(name="test")
         self.assertIsNotNone(chatter)
         print(f"\ntest_get_chatter: {chatter}")
 
     def test_create(self):
         chatter = fake.chatter()
         self.chatter_repo.create(chatter)
-        chatter = self.chatter_repo.get_chatter_by_name(chatter.name)
+        chatter = self.chatter_repo.find(name=chatter.name)
         self.assertIsNotNone(chatter)
 
     def test_create_many(self):
@@ -35,5 +35,5 @@ class ChatterRepositoryTests(unittest.TestCase):
 
         self.chatter_repo.create_many(chatters)
         for chatter in chatters:
-            chatter = self.chatter_repo.get_chatter_by_name(chatter.name)
+            chatter = self.chatter_repo.find(name=chatter.name)
             self.assertIsNotNone(chatter)

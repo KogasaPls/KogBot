@@ -53,9 +53,10 @@ class BaseRepository(Generic[Entity], metaclass=ABCMeta):
         with self.db as db:
             return db.execute(sql).fetchall()
 
-    def find_by_id(self, id: int) -> Entity:
+    def find(self, **kwargs) -> Entity:
         sql = f"""
-        SELECT * FROM {self.table_name} WHERE id = ?
+        SELECT * FROM {self.table_name} WHERE
         """
-        row = self.db.execute(sql, (id,)).fetchone()
+        sql += " AND ".join([f"{k} = ?" for k in kwargs.keys()])
+        row = self.db.execute(sql, tuple(kwargs.values())).fetchone()
         return self.convert(row)
