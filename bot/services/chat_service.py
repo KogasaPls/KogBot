@@ -4,9 +4,9 @@ import dataclasses
 import sqlite3
 from typing import Generic
 
-from bot.services.interfaces import (IGeneratorService, ITokenizerService,
-                                     Tokens)
-from models.chat.chat_message import ChatMessage
+from bot.services.interfaces import (IGeneratorService,
+                                     ITokenizerService, Tokens)
+from entities.chat.chat_message import ChatMessage
 from utils.abstract_base_classes import Service
 
 
@@ -92,4 +92,4 @@ class ChatService(Service, Generic[Tokens]):
         return decoded
 
     async def tokenize(self, message: ChatMessage):
-        return await self.tokenizer_service.tokenize_async(message.text)
+        return await self.tokenizer_service.tokenize_async(message.message)

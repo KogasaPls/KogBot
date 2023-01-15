@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Generic, TypeVar
 
-from models.chat.chat_message import ChatMessage
+from entities.chat.chat_message import ChatMessage
 from utils.abstract_base_classes import Service
 
 Tokens = TypeVar('Tokens')

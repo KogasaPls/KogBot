@@ -7,7 +7,7 @@ from aiologger.handlers import streams
 
 
 def log(cls):
-    """A class decorator that adds an async logger to the class."""
+    """A class decorator that adds an async logger factory to the class."""
     cls.logger_factory = get_logger
     return cls
 
@@ -49,10 +49,10 @@ def replace_color_codes(string: str):
 
 def get_logger(self: object, config: dict):
     """Returns an aiologger logger."""
-    if config["logging"]["enabled"]:
-        return get_async_logger(self, config)
-    else:
+    if not config["logging"]["enabled"].lower() == "true":
         return FakeAsyncLogger()
+    else:
+        return get_async_logger(self, config)
 
 
 class FakeAsyncLogger:

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0b92b02f463a9730866b18c00d97a99d3ae1a0e7fcc6efa45565bd69cbb91d59"
+            "sha256": "3ce0c0c0021d2d5d342384477e60683f5819f5ec0b1f5b3ecf868566a5c96440"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -106,6 +106,14 @@
             ],
             "index": "pypi",
             "version": "==4.41.0"
+        },
+        "faker": {
+            "hashes": [
+                "sha256:5420467fad3fa582094057754e5e81326cb1f51ab822bf9df96c077cfb35ae49",
+                "sha256:dcffdca8ec9a715982bcd5f53ee688dc4784cd112f9910f8f7183773eb3ec276"
+            ],
+            "index": "pypi",
+            "version": "==16.4.0"
         },
         "httptools": {
             "hashes": [
@@ -340,6 +348,14 @@
             ],
             "index": "pypi",
             "version": "==0.2.2"
+        },
+        "python-dateutil": {
+            "hashes": [
+                "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86",
+                "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"
+            ],
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
+            "version": "==2.8.2"
         },
         "sanic": {
             "hashes": [

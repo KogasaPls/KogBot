@@ -1,7 +1,7 @@
 import asyncio
 
-from models.chat.chat_message import ChatMessage
-from models.chat.chatter import Chatter
+from entities.chat.chat_message import ChatMessage
+from entities.chat.chatter import Chatter
 from services.interfaces import IChatService
 from utils.dependency_injection import Container
 
