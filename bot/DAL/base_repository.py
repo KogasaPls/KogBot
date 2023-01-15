@@ -27,13 +27,16 @@ class BaseRepository(Generic[Entity], metaclass=ABCMeta):
     def commit(self):
         self.db.commit()
 
-    def create(self, obj: Entity):
+    def create(self, obj: Entity) -> Entity:
         adapted: tuple = self.adapt(obj)
         sql = f"""
         INSERT INTO {self.table_name} VALUES ({self.tuple_format_string});
         """
         with self.db as db:
-            db.execute(sql, adapted)
+            db.execute(sql, adapted).fetchone()
+            id = db.execute("SELECT last_insert_rowid();").fetchone()[0]
+            obj.id = id
+            return obj
 
     def create_many(self, objs: list[Entity]):
         adapted = [self.adapt(obj) for obj in objs]
@@ -49,3 +52,10 @@ class BaseRepository(Generic[Entity], metaclass=ABCMeta):
         """
         with self.db as db:
             return db.execute(sql).fetchall()
+
+    def find_by_id(self, id: int) -> Entity:
+        sql = f"""
+        SELECT * FROM {self.table_name} WHERE id = ?
+        """
+        row = self.db.execute(sql, (id,)).fetchone()
+        return self.convert(row)

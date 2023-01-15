@@ -22,8 +22,18 @@ class ChatterRepositoryTests(unittest.TestCase):
         self.assertIsNotNone(chatter)
         print(f"\ntest_get_chatter: {chatter}")
 
-    def test_create_chatter(self):
+    def test_create(self):
         chatter = fake.chatter()
         self.chatter_repo.create(chatter)
         chatter = self.chatter_repo.get_chatter_by_name(chatter.name)
         self.assertIsNotNone(chatter)
+
+    def test_create_many(self):
+        chatters = []
+        for _ in range(1000):
+            chatters.append(fake.chatter())
+
+        self.chatter_repo.create_many(chatters)
+        for chatter in chatters:
+            chatter = self.chatter_repo.get_chatter_by_name(chatter.name)
+            self.assertIsNotNone(chatter)

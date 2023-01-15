@@ -16,14 +16,15 @@ class FakeProvider(BaseProvider):
 
     def chatter(self):
         id = self.random_int()
-        name = fake.name()
+        name = fake.user_name()
         return Chatter(id, name)
 
     def chat_message(self):
         sender = self.chatter()
         chat_room = self.chat_room()
         message = fake.text(30)
-        return ChatMessage(sender, chat_room, message)
+        timestamp = fake.date_time()
+        return ChatMessage(sender, chat_room, message, timestamp)
 
 
 fake.add_provider(FakeProvider)
