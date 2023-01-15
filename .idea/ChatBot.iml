@@ -5,6 +5,8 @@
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/bot" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/py" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/test/.pytest_cache" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11 (ChatBot)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
