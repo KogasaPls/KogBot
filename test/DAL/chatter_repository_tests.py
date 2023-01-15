@@ -2,6 +2,7 @@ import unittest
 
 from bot.DAL.chatter_repository import ChatterRepository
 from bot.utils.dependency_injection import Container
+from fake_provider import fake
 
 
 class ChatterRepositoryTests(unittest.TestCase):
@@ -20,3 +21,9 @@ class ChatterRepositoryTests(unittest.TestCase):
         chatter = self.chatter_repo.get_chatter_by_name("KogasaPls")
         self.assertIsNotNone(chatter)
         print(f"\ntest_get_chatter: {chatter}")
+
+    def test_create_chatter(self):
+        chatter = fake.chatter()
+        self.chatter_repo.create(chatter)
+        chatter = self.chatter_repo.get_chatter_by_name(chatter.name)
+        self.assertIsNotNone(chatter)

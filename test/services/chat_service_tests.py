@@ -2,7 +2,7 @@ import unittest
 
 from bot.services.interfaces import IChatService
 from bot.utils.dependency_injection import Container
-from faker.faker import get_fake_chat_message
+from fake_provider import get_fake_chat_message
 
 
 class ChatServiceTests(unittest.IsolatedAsyncioTestCase):

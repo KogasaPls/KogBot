@@ -5,10 +5,6 @@ from typing import Generic, TypeVar
 Entity = TypeVar('Entity')
 
 
-def get_tuple_format_string(num_params: int):
-    return "?, " * num_params
-
-
 class BaseRepository(Generic[Entity], metaclass=ABCMeta):
     db: sqlite3.Connection
     table_name: str
@@ -18,7 +14,7 @@ class BaseRepository(Generic[Entity], metaclass=ABCMeta):
                  num_params: int):
         self.db = db
         self.table_name = table_name
-        self.tuple_format_string = get_tuple_format_string(num_params)
+        self.tuple_format_string = ",".join(["?"] * num_params)
 
     @abstractmethod
     def adapt(self, obj: Entity) -> tuple:
@@ -34,7 +30,7 @@ class BaseRepository(Generic[Entity], metaclass=ABCMeta):
     def create(self, obj: Entity):
         adapted: tuple = self.adapt(obj)
         sql = f"""
-        INSERT INTO {obj.db_table_name} VALUES ({self.tuple_format_string});
+        INSERT INTO {self.table_name} VALUES ({self.tuple_format_string});
         """
         with self.db as db:
             db.execute(sql, adapted)

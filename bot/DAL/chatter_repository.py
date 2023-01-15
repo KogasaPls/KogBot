@@ -7,7 +7,7 @@ from entities.chat.chatter import Chatter
 class ChatterRepository(BaseRepository[Chatter]):
 
     def __init__(self, db: sqlite3.Connection):
-        super().__init__(db, "Chatters", 4)
+        super().__init__(db, "Chatters", 2)
 
     def adapt(self, chatter: Chatter) -> tuple:
         return tuple([chatter.id, chatter.name])
