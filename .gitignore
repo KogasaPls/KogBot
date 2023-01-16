@@ -74,6 +74,6 @@ dmypy.json
 .pyre/
 .pytype/
 cython_debug/
-*.db
 .idea/
-!/test/TestDataStore.db
+/test/TestDataStore.db
+DataStore.db
