@@ -20,7 +20,7 @@ class ChatMessage(DomainModel[ChatMessageEntity]):
         entity.chatter_name = self.chatter.name
         entity.chat_room_name = self.chat_room.name
         entity.message = self.message
-        entity.sent_at_time = self.sent_at_time
+        entity.sent_at_time = int(self.sent_at_time.timestamp())
         entity.chatter_id = self.chatter.id
         entity.chat_room_id = self.chat_room.id
         return entity
