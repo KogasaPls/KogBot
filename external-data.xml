@@ -3,7 +3,7 @@
   <object-set>
     <table path="main.ChatMessages">
       <table path="main.ChatRooms" name="ChatRoomId" from="ChatRoomId" to="Id"/>
-      <table path="main.Chatters" name="virtual_foreign_key_name" from="ChatterId" to="Id"/>
+      <table path="main.Chatters" name="ChatterId" from="ChatterId" to="Id"/>
     </table>
   </object-set>
 </data>
