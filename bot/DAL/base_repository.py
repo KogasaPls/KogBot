@@ -8,12 +8,15 @@ TEntity = TypeVar("TEntity", bound=Entity, covariant=True)
 
 
 # annotation for repos to assign the number of columns and the table name
-def Repo(table_name: str, t: TEntity):
+def Repo(table_name: str, entity_type: type):
+    if not issubclass(entity_type, Entity):
+        raise TypeError(f"Type {entity_type} does not extend {Entity}")
 
     def wrapper(cls):
-        cls.type = t
+        cls.type = entity_type
         cls.table_name = table_name
-        cls.tuple_format_string = ",".join(["?" for _ in t.__annotations__])
+        cls.tuple_format_string = ",".join(
+            ["?" for _ in entity_type.__annotations__])
         return cls
 
     return wrapper
