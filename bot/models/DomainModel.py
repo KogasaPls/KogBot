@@ -3,8 +3,8 @@ from typing import Generic, TypeVar
 
 from entities.Entity import Entity
 
-T = TypeVar("T", bound=Entity, covariant=True)
+TEntity = TypeVar("TEntity", bound=Entity, covariant=True)
 
 
-class DomainModel(Generic[T], metaclass=ABCMeta):
+class DomainModel(Generic[TEntity], metaclass=ABCMeta):
     pass
