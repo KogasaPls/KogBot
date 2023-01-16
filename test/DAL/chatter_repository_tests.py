@@ -23,18 +23,18 @@ class ChatterRepositoryTests(unittest.TestCase):
         self.assertTrue(len(chatters) > 0)
         print(f"\ntest_get_chatter: {chatters}")
 
-    def test_create(self):
+    def test_insert(self):
         chatter = fake.chatter_entity()
-        self.chatter_repo.create(chatter)
+        self.chatter_repo.insert(chatter)
         chatter = self.chatter_repo.find(name=chatter.name)
         self.assertIsNotNone(chatter)
 
-    def test_create_many(self):
+    def test_insert_many(self):
         chatters = []
         for _ in range(1000):
             chatters.append(fake.chatter_entity())
 
-        self.chatter_repo.create_many(chatters)
+        self.chatter_repo.insert_many(chatters)
         for chatter in chatters:
             chatter = self.chatter_repo.find(name=chatter.name)
             self.assertIsNotNone(chatter)

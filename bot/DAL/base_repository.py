@@ -34,7 +34,7 @@ class BaseRepository(Generic[TEntity], metaclass=ABCMeta):
     def commit(self):
         self.db.commit()
 
-    def create(self, obj: TEntity) -> TEntity:
+    def insert(self, obj: TEntity) -> TEntity:
         adapted: tuple = obj.adapt()
         sql = f"""
         INSERT INTO {self.table_name} VALUES ({self.tuple_format_string});
@@ -45,7 +45,7 @@ class BaseRepository(Generic[TEntity], metaclass=ABCMeta):
             obj.id = id
             return obj
 
-    def create_many(self, objs: list[TEntity]):
+    def insert_many(self, objs: list[TEntity]):
         adapted = [obj.adapt() for obj in objs]
         sql = f"""
         INSERT INTO {self.table_name} VALUES ({self.tuple_format_string});

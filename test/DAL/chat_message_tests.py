@@ -17,21 +17,21 @@ class ChatMessageRepositoryTests(unittest.TestCase):
     def setUp(self):
         self.chat_message_repo = ChatMessageRepository(self.container.db())
 
-    def test_create(self):
+    def test_insert(self):
         message = fake.chat_message()
-        self.chat_message_repo.create(message)
+        self.chat_message_repo.insert(message)
 
-    def test_create_many(self):
+    def test_insert_many(self):
         chat_messages = []
         for _ in range(1000):
             message = fake.chat_message()
             chat_messages.append(message)
 
-        self.chat_message_repo.create_many(chat_messages)
+        self.chat_message_repo.insert_many(chat_messages)
 
     def test_find_by_id(self):
         message = fake.chat_message()
-        self.chat_message_repo.create(message)
+        self.chat_message_repo.insert(message)
         found = self.chat_message_repo.find(id=message.id)[0]
         self.assertIsNotNone(found)
         self.assertTrue(hasattr(found, "id"))
