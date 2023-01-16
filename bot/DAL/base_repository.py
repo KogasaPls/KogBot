@@ -63,4 +63,4 @@ class BaseRepository(Generic[TEntity], metaclass=ABCMeta):
         """
         sql += " AND ".join([f"{k} = ?" for k in kwargs.keys()])
         rows = self.db.execute(sql, tuple(kwargs.values())).fetchall()
-        return [self.type.convert(row) for row in rows]
+        return [Entity.bind(row, self.type) for row in rows]

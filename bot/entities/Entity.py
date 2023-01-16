@@ -1,10 +1,15 @@
 import abc
+from typing import Self
 
 
 class Entity(metaclass=abc.ABCMeta):
 
+    def __init__(self):
+        pass
+
     def __db_mapping__(self):
-        yield from self.__dict__.items()
+        for key in self.__annotations__.keys():
+            yield key, getattr(self, key)
 
     def adapt(self):
         """Converts the entity to a tuple for insertion into the database.
@@ -12,6 +17,10 @@ class Entity(metaclass=abc.ABCMeta):
         return tuple((value if key != "id" else None
                       for key, value in self.__db_mapping__()))
 
-    def convert(self, row):
-        for key, value in zip(self.__db_mapping__(), row):
-            self.__dict__[key] = value
+    @classmethod
+    def bind(cls, row, t: type) -> Self:
+        """Converts a row from the database to an entity."""
+        instance = t()
+        for key, value in zip(t.__annotations__.keys(), row):
+            setattr(instance, key, value)
+        return instance
