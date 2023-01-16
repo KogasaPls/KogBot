@@ -57,8 +57,8 @@ class BotService(IBotService, Service):
 
             await self.logger.info(f"Responding to {addr!r}: {response}")
             writer.write(response.encode())
-            await writer.drain()
 
+        await writer.drain()
         writer.close()
         await writer.wait_closed()
         await self.logger.info(f"Connection to  {addr!r} closed")
