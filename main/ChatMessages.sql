@@ -9,3 +9,9 @@ CREATE TABLE ChatMessages
     ChatterId INTEGER,
     ChatRoomId INTEGER
 );
+
+CREATE INDEX ChatMessages_ChatRoomId_SentAtTime_index
+    ON ChatMessages (ChatRoomId ASC, SentAtTime DESC);
+
+CREATE INDEX ChatMessages_ChatterId_ChatRoomId_SentAtTime_index
+    ON ChatMessages (ChatterId ASC, ChatRoomId ASC, SentAtTime DESC);

@@ -1,6 +1,5 @@
 CREATE TRIGGER tInsertChatMessage
-    AFTER UPDATE OF ChatterName
-    ON ChatMessages
+    AFTER INSERT ON ChatMessages
 BEGIN
     INSERT OR IGNORE INTO Chatters
         (
