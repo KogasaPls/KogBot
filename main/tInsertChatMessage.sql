@@ -1,4 +1,4 @@
-CREATE TRIGGER main.tInsertChatMessage
+CREATE TRIGGER tInsertChatMessage
     AFTER INSERT
     ON ChatMessages
 BEGIN
@@ -27,5 +27,5 @@ BEGIN
     UPDATE Chatters
     SET LastMessageId = NEW.Id
       , LastMessageSentAt = NEW.SentAtTime
-    WHERE Id = ChatterId;
+    WHERE Id = (SELECT Id FROM Chatters WHERE Name = NEW.ChatterName);
 END;

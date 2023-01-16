@@ -1,4 +1,4 @@
-CREATE TABLE main.Chatters
+CREATE TABLE Chatters
 (
     Id INTEGER
         PRIMARY KEY,
@@ -7,3 +7,6 @@ CREATE TABLE main.Chatters
     LastMessageId INTEGER,
     LastMessageSentAt INT
 );
+
+CREATE INDEX Chatters_LastMessageSentAt_index
+    ON Chatters (LastMessageSentAt DESC);
