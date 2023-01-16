@@ -27,5 +27,5 @@ BEGIN
     UPDATE Chatters
     SET LastMessageId = NEW.Id
       , LastMessageSentAt = NEW.SentAtTime
-    WHERE Id = (SELECT Id FROM Chatters WHERE Name = NEW.ChatterName);
+    WHERE Id = ChatterId;
 END;
