@@ -19,7 +19,7 @@ class ChatMessageRepositoryTests(unittest.TestCase):
 
     def test_create(self):
         message = fake.chat_message()
-        self.assertIsNone(message.id)
+        self.assertFalse(hasattr(message, "id"))
         self.chat_message_repo.create(message)
         self.assertIsNotNone(message.id)
 

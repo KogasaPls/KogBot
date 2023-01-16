@@ -8,8 +8,12 @@ class Entity(metaclass=abc.ABCMeta):
         pass
 
     def __db_mapping__(self):
+        """Returns (attr, val) pairs for the annotations of this class."""
         for key in self.__annotations__.keys():
-            yield key, getattr(self, key)
+            if hasattr(self, key):
+                yield key, getattr(self, key)
+            else:
+                yield key, None
 
     def adapt(self):
         """Converts the entity to a tuple for insertion into the database.
