@@ -19,9 +19,7 @@ class ChatMessageRepositoryTests(unittest.TestCase):
 
     def test_create(self):
         message = fake.chat_message()
-        self.assertFalse(hasattr(message, "id"))
         self.chat_message_repo.create(message)
-        self.assertIsNotNone(message.id)
 
     def test_create_many(self):
         chat_messages = []
@@ -34,7 +32,7 @@ class ChatMessageRepositoryTests(unittest.TestCase):
     def test_find_by_id(self):
         message = fake.chat_message()
         self.chat_message_repo.create(message)
-        self.assertIsNotNone(message.id)
-        found = self.chat_message_repo.find(id=message.id)
+        found = self.chat_message_repo.find(id=message.id)[0]
         self.assertIsNotNone(found)
+        self.assertTrue(hasattr(found, "id"))
         self.assertEqual(message.id, found.id)

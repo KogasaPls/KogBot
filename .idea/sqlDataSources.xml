@@ -33,6 +33,7 @@
               <option value="file://$PROJECT_DIR$/main/ChatMessages.sql" />
               <option value="file://$PROJECT_DIR$/main/ChatRooms.sql" />
               <option value="file://$PROJECT_DIR$/main/Chatters.sql" />
+              <option value="file://$PROJECT_DIR$/main/tInsertChatMessage.sql" />
             </array>
           </option>
           <option name="outPath" value="$PROJECT_DIR$" />

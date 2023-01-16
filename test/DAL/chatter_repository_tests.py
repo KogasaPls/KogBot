@@ -24,7 +24,7 @@ class ChatterRepositoryTests(unittest.TestCase):
         print(f"\ntest_get_chatter: {chatters}")
 
     def test_create(self):
-        chatter = fake.chatter()
+        chatter = fake.chatter_entity()
         self.chatter_repo.create(chatter)
         chatter = self.chatter_repo.find(name=chatter.name)
         self.assertIsNotNone(chatter)
@@ -32,7 +32,7 @@ class ChatterRepositoryTests(unittest.TestCase):
     def test_create_many(self):
         chatters = []
         for _ in range(1000):
-            chatters.append(fake.chatter())
+            chatters.append(fake.chatter_entity())
 
         self.chatter_repo.create_many(chatters)
         for chatter in chatters:

@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Generic, Self, TypeVar
+from typing import Generic, TypeVar
 
 from entities.Entity import Entity
 
@@ -9,11 +9,10 @@ TEntity = TypeVar("TEntity", bound=Entity, covariant=True)
 class DomainModel(Generic[TEntity], metaclass=ABCMeta):
     pass
 
-    @classmethod
-    @abstractmethod
-    def convert(cls, entity: TEntity) -> Self:
-        """Converts an entity to a domain model."""
-        pass
+    def adapt(self) -> tuple:
+        """Forwards to the underlying entity's adapt method."""
+        entity = self.bind()
+        return entity.adapt()
 
     @abstractmethod
     def bind(self) -> TEntity:

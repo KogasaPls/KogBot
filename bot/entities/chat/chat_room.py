@@ -7,3 +7,6 @@ from entities.Entity import Entity
 class ChatRoom(Entity):
     id: int
     name: str
+
+    def __init__(self):
+        super().__init__()

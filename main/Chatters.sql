@@ -1,6 +1,6 @@
 CREATE TABLE Chatters
 (
-    Id INTEGER NOT NULL
+    Id INTEGER
         PRIMARY KEY,
     Name TEXT NOT NULL
 );

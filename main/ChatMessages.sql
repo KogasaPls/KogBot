@@ -1,11 +1,11 @@
 CREATE TABLE ChatMessages
 (
-    Id INTEGER NOT NULL
+    Id INTEGER
         PRIMARY KEY,
-    ChatterId INTEGER NOT NULL
-        REFERENCES Chatters,
-    ChatRoomId INTEGER NOT NULL
-        REFERENCES ChatRooms,
+    ChatterName TEXT NOT NULL,
+    ChatRoomName TEXT NOT NULL,
     Message TEXT NOT NULL,
-    SentAtTime INT NOT NULL
+    SentAtTime INT NOT NULL,
+    ChatterId INTEGER,
+    ChatRoomId INTEGER
 );
