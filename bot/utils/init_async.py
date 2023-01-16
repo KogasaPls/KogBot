@@ -45,7 +45,7 @@ async def init_async_no_callback(t, *args):
     """Initialize an object, await on it, and return it.
     Do not call the object's callback."""
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     instance = await loop.run_in_executor(None, t, *args)
     if hasattr(instance, '__init_async__'):
         await instance.__init_async__()

@@ -50,7 +50,7 @@ class IChatMessageService(Service):
 class IBotService(Service):
 
     @abstractmethod
-    async def run(self):
+    async def start(self):
         pass
 
 
