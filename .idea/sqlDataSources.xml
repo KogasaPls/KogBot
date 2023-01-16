@@ -5,8 +5,10 @@
       <data-sources db="3b66a197-e5db-4bd9-bc57-e3f3ee409ecf" ddl="563f2bb8-c766-471a-b82b-3ecfc84ca5b2" />
       <scope>
         <node negative="1">
+          <node kind="database" negative="1">
+            <node kind="schema" negative="1" />
+          </node>
           <node kind="schema" qname="main" />
-          <node kind="database" negative="1" />
         </node>
       </scope>
     </mapping>
@@ -14,7 +16,9 @@
       <data-sources db="eec88bb4-4303-4145-95c3-d5b60cd19246" ddl="563f2bb8-c766-471a-b82b-3ecfc84ca5b2" />
       <scope>
         <node negative="1">
-          <node kind="database" negative="1" />
+          <node kind="database" negative="1">
+            <node kind="schema" negative="1" />
+          </node>
           <node kind="schema" qname="main" />
         </node>
       </scope>
@@ -29,7 +33,6 @@
           <option name="dbmsName" value="SQLITE" />
           <option name="urls">
             <array>
-              <option value="file://$PROJECT_DIR$/Messages.sql" />
               <option value="file://$PROJECT_DIR$/main/ChatMessages.sql" />
               <option value="file://$PROJECT_DIR$/main/ChatRooms.sql" />
               <option value="file://$PROJECT_DIR$/main/Chatters.sql" />

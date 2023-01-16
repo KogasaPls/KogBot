@@ -1,4 +1,4 @@
-CREATE TABLE Chatters
+CREATE TABLE main.Chatters
 (
     Id INTEGER
         PRIMARY KEY,

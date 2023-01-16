@@ -1,4 +1,4 @@
-CREATE TABLE ChatMessages
+CREATE TABLE main.ChatMessages
 (
     Id INTEGER
         PRIMARY KEY,

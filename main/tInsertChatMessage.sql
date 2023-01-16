@@ -1,4 +1,4 @@
-CREATE TRIGGER tInsertChatMessage
+CREATE TRIGGER main.tInsertChatMessage
     AFTER INSERT
     ON ChatMessages
 BEGIN
