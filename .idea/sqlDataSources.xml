@@ -41,6 +41,12 @@
           </option>
           <option name="outPath" value="$PROJECT_DIR$" />
           <option name="outLayout" value="File per object by schema.groovy" />
+          <option name="scriptOptions">
+            <map>
+              <entry key="QualifyWithSchema" value="ALWAYS" />
+              <entry key="UseCompactDef" value="1" />
+            </map>
+          </option>
           <option name="scopes">
             <map>
               <entry key="" value="" />

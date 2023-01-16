@@ -1,4 +1,4 @@
-CREATE TABLE ChatMessages
+CREATE TABLE main.ChatMessages
 (
     Id INTEGER
         PRIMARY KEY,
@@ -10,8 +10,8 @@ CREATE TABLE ChatMessages
     ChatRoomId INTEGER
 );
 
-CREATE INDEX ChatMessages_ChatRoomId_SentAtTime_index
-    ON ChatMessages (ChatRoomId ASC, SentAtTime DESC);
+CREATE INDEX main.ChatMessages_ChatRoomId_SentAtTime_index
+    ON main.ChatMessages (ChatRoomId ASC, SentAtTime DESC);
 
-CREATE INDEX ChatMessages_ChatterId_ChatRoomId_SentAtTime_index
-    ON ChatMessages (ChatterId ASC, ChatRoomId ASC, SentAtTime DESC);
+CREATE INDEX main.ChatMessages_ChatterId_ChatRoomId_SentAtTime_index
+    ON main.ChatMessages (ChatterId ASC, ChatRoomId ASC, SentAtTime DESC);

@@ -1,4 +1,4 @@
-CREATE TABLE ChatRooms
+CREATE TABLE main.ChatRooms
 (
     Id INTEGER
         PRIMARY KEY,
