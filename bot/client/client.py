@@ -1,8 +1,30 @@
 import asyncio
+import dataclasses
+import pickle
 import ssl
 
 from dotenv import dotenv_values
 from twitchio.ext import commands
+
+
+@dataclasses.dataclass
+class DataPackage:
+    message: str
+    user: str
+    channel: str
+    time: str
+
+    def serialize(self) -> bytes:
+        return pickle.dumps(self)
+
+    @staticmethod
+    def deserialize(data: bytes) -> "DataPackage":
+        return pickle.loads(data)
+
+
+def adapt(message):
+    return DataPackage(message.content, message.author.name,
+                       message.channel.name, message.timestamp)
 
 
 class TwitchBot(commands.Bot):
@@ -22,8 +44,8 @@ class TwitchBot(commands.Bot):
 
     async def event_message(self, message):
         print("Message received: " + message.content)
-        data = message.content.encode()
-        self.stream_writer.write(data)
+        data_package = adapt(message)
+        self.stream_writer.write(data_package.serialize())
         self.stream_writer.write_eof()
         await self.stream_writer.drain()
         response = await self.stream_reader.readline()

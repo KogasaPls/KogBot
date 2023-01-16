@@ -4,6 +4,7 @@ import ssl
 
 from faker import Faker
 from bot.services.interfaces import IAuthService, IBotService, IChatService
+from client.data import DataPackage
 from fake_provider import FakeProvider
 from models.chat_message import ChatMessage
 from utils.abstract_base_classes import Service
@@ -50,7 +51,8 @@ class BotService(IBotService, Service):
                 return
 
         async for data in reader:
-            message = data.decode()
+            data = DataPackage.deserialize(data)
+            message = data.message
 
             await self.logger.info(f"Received {message!r} from {addr!r}")
             response = await self.get_response(message)
