@@ -1,18 +1,9 @@
-from dataclasses import dataclass
+import dataclasses
 
-from entities.DomainObject import DomainObject
-
-
-@dataclass
-class Chatter:
-    id: int
-    name: str
-
-    def __repr__(self):
-        return self.name
+from entities.Entity import Entity
 
 
-@dataclass
-class ChatterDO(DomainObject[Chatter]):
+@dataclasses.dataclass
+class Chatter(Entity):
     id: int
     name: str

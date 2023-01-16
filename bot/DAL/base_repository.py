@@ -1,62 +1,66 @@
 import sqlite3
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 from typing import Generic, TypeVar
 
-Entity = TypeVar('Entity')
+from entities.Entity import Entity
+
+TEntity = TypeVar("TEntity", bound=Entity, covariant=True)
 
 
-class BaseRepository(Generic[Entity], metaclass=ABCMeta):
+# annotation for repos to assign the number of columns and the table name
+def Repo(table_name: str, t: TEntity):
+
+    def wrapper(cls):
+        cls.type = t
+        cls.table_name = table_name
+        cls.tuple_format_string = ",".join(["?" for _ in t.__annotations__])
+        return cls
+
+    return wrapper
+
+
+class BaseRepository(Generic[TEntity], metaclass=ABCMeta):
     db: sqlite3.Connection
     table_name: str
     tuple_format_string: str
+    type: TEntity
 
-    def __init__(self, db: sqlite3.Connection, table_name: str,
-                 num_params: int):
+    def __init__(self, db: sqlite3.Connection):
         self.db = db
-        self.table_name = table_name
-        self.tuple_format_string = ",".join(["?"] * num_params)
-
-    @abstractmethod
-    def adapt(self, obj: Entity) -> tuple:
-        pass
-
-    @abstractmethod
-    def convert(self, val: str) -> Entity:
-        pass
 
     def commit(self):
         self.db.commit()
 
-    def create(self, obj: Entity) -> Entity:
-        adapted: tuple = self.adapt(obj)
+    def create(self, obj: TEntity) -> TEntity:
+        adapted: tuple = obj.adapt()
         sql = f"""
         INSERT INTO {self.table_name} VALUES ({self.tuple_format_string});
         """
         with self.db as db:
-            db.execute(sql, adapted).fetchone()
+            db.execute(sql, adapted)
             id = db.execute("SELECT last_insert_rowid();").fetchone()[0]
             obj.id = id
             return obj
 
-    def create_many(self, objs: list[Entity]):
-        adapted = [self.adapt(obj) for obj in objs]
+    def create_many(self, objs: list[TEntity]):
+        adapted = [obj.adapt() for obj in objs]
         sql = f"""
         INSERT INTO {self.table_name} VALUES ({self.tuple_format_string});
         """
         with self.db as db:
             db.executemany(sql, adapted)
 
-    def get_all(self) -> list[Entity]:
+    def get_all(self) -> list[TEntity]:
         sql = f"""
         SELECT * FROM {self.table_name};
         """
         with self.db as db:
             return db.execute(sql).fetchall()
 
-    def find(self, **kwargs) -> Entity:
+    def find(self, **kwargs) -> list[TEntity]:
         sql = f"""
         SELECT * FROM {self.table_name} WHERE
         """
         sql += " AND ".join([f"{k} = ?" for k in kwargs.keys()])
-        row = self.db.execute(sql, tuple(kwargs.values())).fetchone()
-        return self.convert(row)
+        rows = self.db.execute(sql, tuple(kwargs.values())).fetchall()
+        return [self.type.convert(row) for row in rows]

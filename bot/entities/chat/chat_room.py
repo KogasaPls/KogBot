@@ -1,15 +1,9 @@
-from dataclasses import dataclass
+import dataclasses
 
-from entities.DomainObject import DomainObject
-
-
-@dataclass
-class ChatRoom:
-    id: int
-    name: str
+from entities.Entity import Entity
 
 
-@dataclass
-class ChatRoomDO(DomainObject[ChatRoom]):
+@dataclasses.dataclass
+class ChatRoom(Entity):
     id: int
     name: str

@@ -18,9 +18,10 @@ class ChatterRepositoryTests(unittest.TestCase):
         self.chatter_repo = ChatterRepository(self.container.db())
 
     def test_find_by_name(self):
-        chatter = self.chatter_repo.find(name="test")
-        self.assertIsNotNone(chatter)
-        print(f"\ntest_get_chatter: {chatter}")
+        chatters = self.chatter_repo.find(name="owilson")
+        chatters = [chatter for chatter in chatters if chatter is not None]
+        self.assertTrue(len(chatters) > 0)
+        print(f"\ntest_get_chatter: {chatters}")
 
     def test_create(self):
         chatter = fake.chatter()
