@@ -1,7 +1,8 @@
 import asyncio
 from dataclasses import dataclass
+from typing import List
 
-from transformers import AutoTokenizer, GPT2Tokenizer
+from transformers import AutoTokenizer, GPT2Tokenizer, TensorType
 from bot.services.interfaces import ITokenizerService, Tokens
 
 
@@ -26,15 +27,15 @@ class TokenizerService(ITokenizerService):
             None, AutoTokenizer.from_pretrained, self.tokenizer_name)
         await self.logger.debug("Tokenizer loaded.")
 
-    def tokenize(self, data: str) -> Tokens:
-        tokens = self.tokenizer.encode(data, return_tensors="pt")
+    def tokenize(self, data: str) -> List[Tokens]:
+        tokens = self.tokenizer.encode(data, return_tensors=TensorType.PYTORCH)
         return tokens
 
-    async def tokenize_async(self, data: str) -> Tokens:
-        await self.logger.debug(f"Tokenizing \"{data}\"...")
+    async def tokenize_async(self, data: str) -> List[Tokens]:
+        await self.logger.debug(f"Tokenizing \"{data.strip()}\"...")
         tokens = await asyncio.get_running_loop().run_in_executor(
             None, self.tokenize, data)
-        await self.logger.debug(f"Tokenized \"{data}\" to {tokens}")
+        await self.logger.debug(f"Tokenized \"{data.strip()}\" to {tokens}")
 
         return tokens
 

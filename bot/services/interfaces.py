@@ -21,7 +21,7 @@ class IAuthService(Service):
 class ITokenizerService(Generic[Tokens], Service):
 
     @abstractmethod
-    async def tokenize_async(self, data: str) -> Tokens:
+    async def tokenize_async(self, data: str) -> list[Tokens]:
         raise NotImplementedError
 
     @abstractmethod
@@ -37,6 +37,10 @@ class IGeneratorService(Generic[Tokens], Service):
 
     @abstractmethod
     async def generate_async(self, data: Tokens, eos_token: Tokens) -> Tokens:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_max_input_tokens(self) -> int:
         raise NotImplementedError
 
 
@@ -61,5 +65,5 @@ class IBotService(Service):
 class IChatService(Service):
 
     @abstractmethod
-    async def get_response(self, message: ChatMessage | None) -> str:
+    async def get_response(self, message: ChatMessage | None) -> str | None:
         raise NotImplementedError

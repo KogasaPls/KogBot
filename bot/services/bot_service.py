@@ -1,6 +1,7 @@
 import asyncio
 import sqlite3
 import ssl
+from asyncio import Server
 
 from bot.models.chat_message import ChatMessage
 from bot.services.chat_service import ChatService
@@ -24,8 +25,8 @@ class BotService(IBotService, Service):
 
     async def start_server(self):
         await self.logger.info("Starting bot service...")
-        server = await asyncio.start_server(self.handle_connection, '127.0.0.1',
-                                            8888)
+        server: Server = await asyncio.start_server(self.handle_connection,
+                                                    '127.0.0.1', 8888)
 
         async with server:
             await self.logger.info(
@@ -37,22 +38,14 @@ class BotService(IBotService, Service):
         await self.logger.info(f"Connection established from {addr}")
 
         if use_tls:
-            try:
-                reader, writer = await self.upgrade_connection(
-                    addr, reader, writer)
-            except Exception as e:
-                await self.logger.error(
-                    f"Error upgrading connection to TLS: {e}")
-                return
+            reader, writer = await self.upgrade_connection(addr, writer)
 
-        connection_loop_task = asyncio.create_task(
-            self.do_connection_loop(addr, reader, writer))
-        connection_loop_task.add_done_callback(
-            lambda _: asyncio.create_task(self.close_connection(addr, writer)))
+        while await self.do_connection_loop(addr, reader, writer):
+            pass
 
-        await connection_loop_task
+        await self.close_connection(addr, writer)
 
-    async def upgrade_connection(self, addr, reader, writer):
+    async def upgrade_connection(self, addr, writer):
         # upgrade to TLS
         await self.logger.info(f"Establishing TLS connection with {addr}")
         reader, writer = await writer.start_tls(self.ssl_context)
@@ -65,13 +58,15 @@ class BotService(IBotService, Service):
             message = ChatMessage.deserialize(data)
         except Exception as e:
             await self.logger.error(f"{addr} - Could not deserialize data, {e}")
-            await self.logger.debug(f"{addr} - Data: {data}")
             return False
 
         await self.logger.info(f"{addr.__repr__()} RECV: {message.__repr__()}")
 
         try:
-            response = await self.get_response(message)
+            response = await self.get_response_or_none(message)
+            if not response:
+                return True
+
             await self.logger.info(
                 f"{addr.__repr__()} SEND: {response.__repr__()}")
             writer.write(response.encode())
@@ -91,9 +86,9 @@ class BotService(IBotService, Service):
         await writer.wait_closed()
         await self.logger.info(f"Connection to {addr} closed")
 
-    async def get_response(self, message):
-        response = await self.chat_service.get_response(message) + "\n"
-        return response
+    async def get_response_or_none(self, message):
+        response = await self.chat_service.get_response(message)
+        return response + "\n" if response else None
 
     def get_ssl_context(self):
         ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)

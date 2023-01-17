@@ -52,7 +52,7 @@ class GeneratorService(IGeneratorService[Tensor]):
                              input_tokens: Tensor | list[Tensor],
                              eos_token: Tensor | None = None) -> Tensor:
         if isinstance(input_tokens, list):
-            input_tokens = torch.cat(input_tokens, dim=1)
+            input_tokens = torch.reshape(torch.cat(input_tokens), (1, -1))
         num_input_tokens = input_tokens.shape[1]
 
         input_tokens = input_tokens.to(self.model_config.device)
@@ -79,6 +79,28 @@ class GeneratorService(IGeneratorService[Tensor]):
                 repetition_penalty=self.model_config.repetition_penalty,
                 length_penalty=self.model_config.length_penalty)[0])
 
-        trimmed_output = output[num_input_tokens:]
-        await self.logger.debug(f"Generated {trimmed_output.shape[0]} tokens.")
+        trimmed_output = self.trim(output, eos_token, num_input_tokens)
+        await self.logger.debug(
+            f"Generated {trimmed_output.shape[0]} new tokens.")
+
         return trimmed_output
+
+    def return_until(self,
+                     tokens: Tensor,
+                     until_token: Tensor | None = None) -> Tensor:
+        if until_token is None:
+            return tokens
+
+        for i, token in enumerate(tokens):
+            if token == until_token and i > self.model_config.min_length:
+                return tokens[:i]
+
+        return tokens
+
+    def trim(self, output: Tensor, eos_token: Tensor | None,
+             num_input_tokens: int) -> Tensor:
+        output = output[num_input_tokens:]
+        return self.return_until(output, eos_token)
+
+    def get_max_input_tokens(self) -> int:
+        return self.model.config.n_positions - 1
