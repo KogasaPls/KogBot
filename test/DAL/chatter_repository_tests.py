@@ -1,6 +1,6 @@
 import unittest
 
-from bot.DAL.chatter_repository import ChatterRepository
+from bot.DAL.repos.chatter_repository import ChatterRepository
 from bot.utils.dependency_injection import Container
 from fake_provider import fake
 

@@ -2,7 +2,7 @@ import sqlite3
 from abc import ABCMeta
 from typing import Generic, TypeVar
 
-from entities.Entity import Entity
+from bot.DAL.entity import Entity
 
 TEntity = TypeVar("TEntity", bound=Entity, covariant=True)
 
@@ -31,21 +31,15 @@ class BaseRepository(Generic[TEntity], metaclass=ABCMeta):
     def __init__(self, db: sqlite3.Connection):
         self.db = db
 
-    def commit(self):
-        self.db.commit()
-
-    def insert(self, obj: TEntity) -> TEntity:
+    def insert(self, obj: TEntity) -> None:
         adapted: tuple = obj.adapt()
         sql = f"""
         INSERT INTO {self.table_name} VALUES ({self.tuple_format_string});
         """
         with self.db as db:
             db.execute(sql, adapted)
-            id = db.execute("SELECT last_insert_rowid();").fetchone()[0]
-            obj.id = id
-            return obj
 
-    def insert_many(self, objs: list[TEntity]):
+    def insert_many(self, objs: list[TEntity]) -> None:
         adapted = [obj.adapt() for obj in objs]
         sql = f"""
         INSERT INTO {self.table_name} VALUES ({self.tuple_format_string});

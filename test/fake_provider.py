@@ -1,8 +1,8 @@
 from faker import Faker
 from faker.providers import BaseProvider
-from models.chat_message import ChatMessage
-from models.chat_room import ChatRoom
-from models.chatter import Chatter
+from bot.models.chat_message import ChatMessage
+from bot.models.chat_room import ChatRoom
+from bot.models.chatter import Chatter
 
 fake = Faker()
 

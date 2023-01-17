@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Generic, TypeVar
 
-from entities.chat.chat_message import ChatMessage
+from bot.models.chat_message import ChatMessage
 from utils.abstract_base_classes import Service
 
 Tokens = TypeVar('Tokens')
@@ -28,11 +28,15 @@ class ITokenizerService(Generic[Tokens], Service):
     async def decode_async(self, tokens: Tokens) -> str:
         raise NotImplementedError
 
+    @abstractmethod
+    def get_newline_token(self) -> Tokens:
+        raise NotImplementedError
+
 
 class IGeneratorService(Generic[Tokens], Service):
 
     @abstractmethod
-    async def generate_async(self, data: Tokens) -> Tokens:
+    async def generate_async(self, data: Tokens, eos_token: Tokens) -> Tokens:
         raise NotImplementedError
 
 

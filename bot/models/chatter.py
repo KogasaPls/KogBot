@@ -1,15 +1,15 @@
-from bot.entities.chat.chatter import Chatter as ChatterEntity
+import dataclasses
 
-from models.DomainModel import DomainModel, TEntity
+from bot.DAL.entities.chatter import Chatter as ChatterEntity
+from bot.models.DomainModel import DomainModel, TEntity
 
 
+@dataclasses.dataclass
 class Chatter(DomainModel[ChatterEntity]):
-    id: int
     name: str
 
     def __db_mapping__(self):
         yield from {
-            "id": self.id,
             "name": self.name,
         }
 
@@ -18,6 +18,5 @@ class Chatter(DomainModel[ChatterEntity]):
 
     def bind(self) -> TEntity:
         entity = ChatterEntity()
-        entity.id = self.id
         entity.name = self.name
         return entity

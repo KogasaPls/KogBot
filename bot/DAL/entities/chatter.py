@@ -1,10 +1,10 @@
 import dataclasses
 
-from entities.Entity import Entity
+from bot.DAL.entity import Entity
 
 
 @dataclasses.dataclass
-class ChatRoom(Entity):
+class Chatter(Entity):
     id: int
     name: str
 

@@ -17,6 +17,7 @@ class TokenizerService(ITokenizerService):
     async def __init_async__(self):
         await super().__init_async__()
         await self.load_tokenizer()
+        self.newline_token = await self.tokenize_async("\n")
 
     async def load_tokenizer(self) -> None:
         await self.logger.debug(
@@ -30,10 +31,10 @@ class TokenizerService(ITokenizerService):
         return tokens
 
     async def tokenize_async(self, data: str) -> Tokens:
-        self.logger.debug(f"Tokenizing \"{data}\"...")
+        await self.logger.debug(f"Tokenizing \"{data}\"...")
         tokens = await asyncio.get_running_loop().run_in_executor(
             None, self.tokenize, data)
-        self.logger.debug(f"Tokenized \"{data}\" to {tokens}")
+        await self.logger.debug(f"Tokenized \"{data}\" to {tokens}")
 
         return tokens
 
@@ -43,3 +44,6 @@ class TokenizerService(ITokenizerService):
     async def decode_async(self, tokens: Tokens) -> str:
         return await asyncio.get_running_loop().run_in_executor(
             None, self.decode, tokens)
+
+    def get_newline_token(self) -> Tokens:
+        return self.newline_token

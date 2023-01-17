@@ -49,7 +49,7 @@ def replace_color_codes(string: str):
 
 def get_logger(self: object, config: dict):
     """Returns an aiologger logger."""
-    if not config["logging"]["enabled"].lower() == "true":
+    if config["logging"]["enabled"].lower() == "false":
         return FakeAsyncLogger()
     else:
         return get_async_logger(self, config)

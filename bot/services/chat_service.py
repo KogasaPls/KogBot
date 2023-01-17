@@ -4,9 +4,9 @@ import dataclasses
 import sqlite3
 from typing import Generic
 
-from bot.services.interfaces import (IGeneratorService,
+from bot.models.chat_message import ChatMessage
+from bot.services.interfaces import (IChatService, IGeneratorService,
                                      ITokenizerService, Tokens)
-from entities.chat.chat_message import ChatMessage
 from utils.abstract_base_classes import Service
 
 
@@ -55,12 +55,10 @@ class ChatServiceConfig:
             config["prompt_duplication_factor"])
 
 
-class ChatService(Service, Generic[Tokens]):
+class ChatService(IChatService, Service, Generic[Tokens]):
     generator_service: IGeneratorService[Tokens]
     tokenizer_service: ITokenizerService[Tokens]
-
     lock: asyncio.Lock = asyncio.Lock()
-
     context: ChatContext[Tokens]
 
     def __init__(self, config: dict, db: sqlite3.Connection,
@@ -73,23 +71,36 @@ class ChatService(Service, Generic[Tokens]):
         self.generator_service = generator_service
         self.context = ChatContext[Tokens](
             max_messages=int(self.config.max_messages))
+        self.newline_token = self.tokenizer_service.get_newline_token()
 
     async def get_response(self, prompt: ChatMessage | None) -> str:
-        self.logger.info(f"Getting response to {prompt}")
         tokens = await self.context.get_tokens()
-        if prompt is not None:
-            prompt_tokens = await self.tokenize(prompt)
-            for _ in range(0, self.config.prompt_duplication_factor):
-                tokens.append(prompt_tokens)
-        model_output = await self.generator_service.generate_async(tokens)
 
+        if prompt is None:
+            await self.logger.info("Getting chat message with no prompt.")
+        else:
+            await self.logger.info(f"Getting response to {prompt.__repr__()}")
+            tokens = await self.prime_tokens_for_prompt(tokens, prompt)
+
+        model_output = await self.generator_service.generate_async(
+            tokens, self.newline_token)
         response = await self.decode(model_output)
-        self.logger.debug(f"Generated response: {response}")
+        if response.count("\n") > 0:
+            await self.logger.warning("Response contains newline(s).")
+
+        await self.logger.debug(f"Generated response: {response}")
         return response
 
+    async def prime_tokens_for_prompt(self, tokens: Tokens,
+                                      prompt: ChatMessage):
+        prompt_tokens = await self.tokenize(prompt)
+        for _ in range(0, self.config.prompt_duplication_factor):
+            tokens.append(prompt_tokens)
+        return tokens
+
     async def decode(self, tokens: Tokens) -> str:
-        decoded = await self.tokenizer_service.decode_async(tokens)
-        return decoded
+        return await self.tokenizer_service.decode_async(tokens)
 
     async def tokenize(self, message: ChatMessage):
-        return await self.tokenizer_service.tokenize_async(message.message)
+        return await self.tokenizer_service.tokenize_async(message.message +
+                                                           "\n")

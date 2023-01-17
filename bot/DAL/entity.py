@@ -15,7 +15,7 @@ class Entity(metaclass=abc.ABCMeta):
             else:
                 yield key, None
 
-    def adapt(self):
+    def adapt(self) -> tuple:
         """Converts the entity to a tuple for insertion into the database.
         id is replaced with None to allow the database to generate a new id."""
         return tuple((value if key != "id" else None

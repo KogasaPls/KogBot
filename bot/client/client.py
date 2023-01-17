@@ -1,30 +1,28 @@
 import asyncio
-import dataclasses
-import pickle
-import ssl
 
+import twitchio
 from dotenv import dotenv_values
 from twitchio.ext import commands
+from bot.models.chat_message import ChatMessage
+from bot.models.chat_room import ChatRoom
+from bot.models.chatter import Chatter
 
 
-@dataclasses.dataclass
-class DataPackage:
-    message: str
-    user: str
-    channel: str
-    time: str
+def adapt(message: twitchio.Message) -> ChatMessage | None:
+    if message.echo:
+        return None
 
-    def serialize(self) -> bytes:
-        return pickle.dumps(self)
-
-    @staticmethod
-    def deserialize(data: bytes) -> "DataPackage":
-        return pickle.loads(data)
+    chatter = Chatter(message.author.name)
+    chat_room = ChatRoom(message.channel.name)
+    return ChatMessage(chatter, chat_room, message.content, message.timestamp)
 
 
-def adapt(message):
-    return DataPackage(message.content, message.author.name,
-                       message.channel.name, message.timestamp)
+def try_adapt(message: twitchio.Message) -> ChatMessage | None:
+    try:
+        return adapt(message)
+    except Exception as e:
+        print(e)
+        return None
 
 
 class TwitchBot(commands.Bot):
@@ -34,28 +32,47 @@ class TwitchBot(commands.Bot):
         super().__init__(token=config["TWITCH_TOKEN"],
                          prefix='?',
                          initial_channels=[config["TWITCH_CHANNEL"]])
-        self.ssl_context = self.get_ssl_context()
         self.stream_reader, self.stream_writer = None, None
 
     async def event_ready(self):
-        print(f'Logged in as | {self.nick}')
+        print(f'Logged in as {self.nick}')
         self.stream_reader, self.stream_writer = await asyncio.open_connection(
-            '127.0.0.1', 8888, ssl=self.ssl_context, happy_eyeballs_delay=0.25)
+            '127.0.0.1', 8888)
 
-    async def event_message(self, message):
-        print("Message received: " + message.content)
-        data_package = adapt(message)
-        self.stream_writer.write(data_package.serialize())
-        self.stream_writer.write_eof()
+    async def event_message(self, msg: twitchio.Message):
+        try:
+            response = await self.handle_message_and_get_response(msg)
+            if response is not None:
+                await msg.channel.send(response)
+        except Exception as e:
+            print(e)
+
+    async def handle_message_and_get_response(
+            self, msg: twitchio.Message) -> str | None:
+        chat_message: ChatMessage = try_adapt(msg)
+        if chat_message is None:
+            return
+
+        print(chat_message.__repr__())
+
+        data = chat_message.serialize()
+        self.stream_writer.write(data)
         await self.stream_writer.drain()
-        response = await self.stream_reader.readline()
-        print("Response received: " + response.decode())
-        await message.channel.send(response.decode())
 
-    def get_ssl_context(self):
-        return False
-        ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
-        return ctx
+        response = await self.try_get_response()
+        if response is None:
+            return
+
+        await msg.channel.send(response)
+
+    async def try_get_response(self) -> str | None:
+        try:
+            response = (await self.stream_reader.readline()).decode()
+            print("Response received: " + response)
+            return response
+        except Exception as e:
+            print(e)
+            return None
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 import unittest
 
-from bot.DAL.chat_message_repository import ChatMessageRepository
+from bot.DAL.repos.chat_message_repository import ChatMessageRepository
 from bot.utils.dependency_injection import Container
 from fake_provider import fake
 

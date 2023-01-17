@@ -1,17 +1,14 @@
-from entities.chat.chat_room import ChatRoom as ChatRoomEntity
+import dataclasses
 
-from models.DomainModel import DomainModel, TEntity
+from bot.DAL.entities.chat_room import ChatRoom as ChatRoomEntity
+from bot.models.DomainModel import DomainModel, TEntity
 
 
+@dataclasses.dataclass
 class ChatRoom(DomainModel[ChatRoomEntity]):
-    id: int
     name: str
-
-    def __db_mapping__(self):
-        yield from {"id": self.id, "name": self.name}
 
     def bind(self) -> TEntity:
         entity = ChatRoomEntity()
-        entity.id = self.id
         entity.name = self.name
         return entity

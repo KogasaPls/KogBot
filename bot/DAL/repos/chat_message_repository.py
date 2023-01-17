@@ -1,7 +1,7 @@
 import sqlite3
 
 from bot.DAL.base_repository import BaseRepository, Repo
-from bot.entities.chat.chat_message import ChatMessage
+from bot.DAL.entities.chat_message import ChatMessage
 
 
 @Repo("ChatMessages", ChatMessage)

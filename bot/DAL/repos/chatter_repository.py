@@ -1,7 +1,7 @@
 import sqlite3
 
 from bot.DAL.base_repository import BaseRepository, Repo
-from entities.chat.chatter import Chatter
+from bot.DAL.entities.chatter import Chatter
 
 
 @Repo("Chatters", Chatter)

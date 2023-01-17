@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from typing import Generic, TypeVar
 
-from entities.Entity import Entity
+from bot.DAL.entity import Entity
 
 TEntity = TypeVar("TEntity", bound=Entity, covariant=True)
 
